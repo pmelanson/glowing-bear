@@ -347,6 +347,24 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
         var buffer = message.buffer;
         var date = message.date;
         var shortTime = $filter('date')(date, 'HH:mm');
+        var formattedTime = "";
+        var formattedTimeSeconds = "";
+
+        if ($rootScope.supports_formatting_date) {
+          var options = {hour: "2-digit", minute: "2-digit"};
+          formattedTime = date.toLocaleTimeString([], options);
+          options.second = "2-digit";
+          formattedTimeSeconds = date.toLocaleTimeString([], options);
+        } else {
+          formattedTime = shortTime;
+          formattedTimeSeconds = $filter('date')(date, 'HH:mm:ss');
+        }
+
+        formattedTime = formattedTime.replace(/ /g, "&nbsp;");
+        formattedTimeSeconds = formattedTimeSeconds.replace(/ /g, "&nbsp;");
+        // Wrap time separators in a span
+        formattedTime = formattedTime.replace(/(:|\.)/g, '<span class="cof-chat_time_delimiters cob-chat_time_delimiters coa-chat_time_delimiters">$1</span>');
+        formattedTimeSeconds = formattedTimeSeconds.replace(/(:|\.)/g, '<span class="cof-chat_time_delimiters cob-chat_time_delimiters coa-chat_time_delimiters">$1</span>');
 
         var prefix = parseRichText(message.prefix);
         var tags_array = message.tags_array;
@@ -370,6 +388,8 @@ models.service('models', ['$rootScope', '$filter', function($rootScope, $filter)
             content: content,
             date: date,
             shortTime: shortTime,
+            formattedTime: formattedTime,
+            formattedTimeSeconds: formattedTimeSeconds,
             buffer: buffer,
             tags: tags_array,
             highlight: highlight,

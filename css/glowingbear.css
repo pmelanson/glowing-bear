@@ -326,6 +326,7 @@ tr.bufferline {
 td.time {
     padding: 1px 5px 1px 1px;
     vertical-align: top;
+    text-align: right;
 }
 
 .withnicklist {
